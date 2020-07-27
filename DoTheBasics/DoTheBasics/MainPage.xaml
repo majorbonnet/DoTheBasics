@@ -6,27 +6,49 @@
              mc:Ignorable="d"
              x:Class="DoTheBasics.MainPage">
     <ContentPage.Content>
-        <ScrollView Padding="5">
-            <StackLayout Orientation="Vertical">
-                <ListView x:Name="ToDosListView"
-                          ItemTapped="ListView_ItemTapped">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                        <ColumnDefinition Width="10"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Text="{Binding Description}" VerticalOptions="Center"></Label>
-                                    <CheckBox IsChecked="{Binding IsDone}" VerticalOptions="Center" HorizontalOptions="EndAndExpand"></CheckBox>
-                                </Grid>
-
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackLayout>
-        </ScrollView>
+        <Grid Padding="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <ListView x:Name="ToDosListView"
+                      Grid.Row="0"
+                      ItemSelected="ToDosListView_ItemSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" x:Name="EditButton" Text="Edit" Clicked="EditButton_Clicked" CommandParameter="{Binding Id}"></Button>
+                                <Label Grid.Column="1" Text="{Binding Title}" VerticalOptions="Center"></Label>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <ListView x:Name="DoneListView"
+                      Grid.Row="1"
+                      ItemSelected="DoneListView_ItemSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" x:Name="EditButton" Text="Edit" Clicked="EditButton_Clicked" CommandParameter="{Binding Id}"></Button>
+                                <Label Grid.Column="1" Text="{Binding Title}" VerticalOptions="Center"></Label>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button x:Name="AddButton" Text="Add" Clicked="AddButton_Clicked" Grid.Row="2"></Button>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
