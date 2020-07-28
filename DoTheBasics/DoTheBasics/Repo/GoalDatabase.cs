@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DoTheBasics.Models;
@@ -67,6 +68,45 @@ namespace DoTheBasics.Repo
             });
 
             var updatedGoal = await conn.FindAsync<Goal>(goal.Id);
+
+            return updatedGoal;
+        }
+
+        public async Task<Goal> UndoGoalCompletion(int goalId)
+        {
+            var conn = await GetDatabaseConnection<Goal, GoalCompletion>().ConfigureAwait(false);
+
+            var last2Completions = await AttemptAndRetry(() => 
+                    conn.QueryAsync<GoalCompletion>(@"SELECT GoalId, CompletionTime 
+FROM GoalCompletion 
+WHERE GoalId = ? 
+ORDER BY CompletionTime DESC
+LIMIT 2", goalId)
+                 )
+                .ConfigureAwait(false);
+
+            if (last2Completions.Count > 1)
+            {
+                var penultimateCompletion = last2Completions.OrderBy(c => c.CompletionTime).First();
+                var lastCompletion = last2Completions.OrderByDescending(c => c.CompletionTime).First();
+
+                await conn.RunInTransactionAsync(tran =>
+                {
+                    tran.Execute("UPDATE Goal SET LastCompletion = ? WHERE Id = ?", penultimateCompletion.CompletionTime, goalId);
+                    tran.Execute("DELETE FROM GoalCompletion WHERE GoalId = ? AND CompletionTime = ?");
+                });
+            }
+
+            if (last2Completions.Count == 1)
+            {
+                await conn.RunInTransactionAsync(tran =>
+                {
+                    tran.Execute("UPDATE Goal SET LastCompletion = ? WHERE Id = ?", DateTime.MinValue, goalId);
+                    tran.Execute("DELETE FROM GoalCompletion WHERE GoalId = ?");
+                });
+            }
+
+            var updatedGoal = await AttemptAndRetry(() => conn.FindAsync<Goal>(goalId)).ConfigureAwait(false);
 
             return updatedGoal;
         }

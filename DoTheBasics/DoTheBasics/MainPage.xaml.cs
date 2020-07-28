@@ -58,27 +58,40 @@ namespace DoTheBasics
             await Navigation.PushAsync(new EditGoal());
         }
 
-        private async void EditButton_Clicked(object sender, EventArgs e)
+        private async void EditSwipeItem_Invoked(object sender, EventArgs e)
         {
-            int goalId = (int)((Button)sender).CommandParameter;
+            int goalId = (int)((SwipeItem)sender).CommandParameter;
 
             await Navigation.PushAsync(new EditGoal(goalId));
         }
 
-        private async void ToDosListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void DeleteSwipeItem_Invoked(object sender, EventArgs e)
         {
-            var goalViewModel = (GoalViewModel)e.SelectedItem;
+            int goalId = (int)((SwipeItem)sender).CommandParameter;
 
-            var goal = await _goalDb.GetGoalAsync(goalViewModel.Id);
+            await Navigation.PushAsync(new EditGoal(goalId));
+        }
+
+        private async void CompleteSwipeItem_Invoked(object sender, EventArgs e)
+        {
+            int goalId = (int)((SwipeItem)sender).CommandParameter;
+
+            var goal = await _goalDb.GetGoalAsync(goalId);
             var updatedGoal = await _goalDb.AddGoalCompletion(goal, DateTime.Now);
 
-            _goalsToComplete.Remove(goalViewModel);
+            _goalsToComplete.Remove(_goalsToComplete.FirstOrDefault(g => g.Id == goalId));
             _completedGoals.Add(new GoalViewModel(updatedGoal));
         }
 
-        private void DoneListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void UndoSwipeItem_Invoked(object sender, EventArgs e)
         {
+            int goalId = (int)((SwipeItem)sender).CommandParameter;
 
+            var goal = await _goalDb.GetGoalAsync(goalId);
+            var updatedGoal = await _goalDb.UndoGoalCompletion(goalId);
+
+            _completedGoals.Remove(_completedGoals.FirstOrDefault(g => g.Id == goalId));
+            _goalsToComplete.Add(new GoalViewModel(updatedGoal));
         }
     }
 }

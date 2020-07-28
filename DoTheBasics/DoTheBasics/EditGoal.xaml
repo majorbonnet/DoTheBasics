@@ -4,14 +4,8 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="DoTheBasics.EditGoal">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+             x:Class="DoTheBasics.EditGoal"
+             Title="Edit Goal">
     <StackLayout Orientation="Vertical" Padding="5" Spacing="5">
         <Entry x:Name="TitleEntry" Placeholder="Enter a title"></Entry>
         <Editor x:Name="DescEditor" Placeholder="Enter a description"></Editor>

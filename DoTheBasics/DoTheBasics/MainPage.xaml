@@ -4,7 +4,8 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="DoTheBasics.MainPage">
+             x:Class="DoTheBasics.MainPage"
+             Title="Daily Goals">
     <ContentPage.Content>
         <Grid Padding="5">
             <Grid.RowDefinitions>
@@ -13,42 +14,91 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <ListView x:Name="ToDosListView"
-                      Grid.Row="0"
-                      ItemSelected="ToDosListView_ItemSelected">
+                      Grid.Row="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" x:Name="EditButton" Text="Edit" Clicked="EditButton_Clicked" CommandParameter="{Binding Id}"></Button>
-                                <Label Grid.Column="1" Text="{Binding Title}" VerticalOptions="Center"></Label>
-                            </Grid>
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Edit"
+                                            IconImageSource="edit.png"
+                                            CommandParameter="{Binding Id}"
+                                            BackgroundColor="LightGray"
+                                            Invoked="EditSwipeItem_Invoked" />
+                                        <SwipeItem Text="Delete"
+                                            IconImageSource="edit.png"
+                                            CommandParameter="{Binding Id}"
+                                            BackgroundColor="LightGray"
+                                            Invoked="DeleteSwipeItem_Invoked" />
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem Text="Complete"
+                                                   IconImageSource="edit.png"
+                                                   CommandParameter="{Binding Id}"
+                                                   BackgroundColor="LightGreen"
+                                                   Invoked="CompleteSwipeItem_Invoked" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Grid>
+                                    <Label Grid.Column="1" Text="{Binding Title}" VerticalOptions="Center"></Label>
+                                </Grid>
+                            </SwipeView>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
             <ListView x:Name="DoneListView"
-                      Grid.Row="1"
-                      ItemSelected="DoneListView_ItemSelected">
+                      Grid.Row="1">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" x:Name="EditButton" Text="Edit" Clicked="EditButton_Clicked" CommandParameter="{Binding Id}"></Button>
-                                <Label Grid.Column="1" Text="{Binding Title}" VerticalOptions="Center"></Label>
+                                <SwipeView>
+                                    <SwipeView.LeftItems>
+                                        <SwipeItems>
+                                            <SwipeItem Text="Edit"
+                                                IconImageSource="edit.png"
+                                                CommandParameter="{Binding Id}"
+                                                BackgroundColor="LightGray"
+                                                Invoked="EditSwipeItem_Invoked" />
+                                            <SwipeItem Text="Delete"
+                                                IconImageSource="edit.png"
+                                                CommandParameter="{Binding Id}"
+                                                BackgroundColor="LightGray"
+                                                Invoked="DeleteSwipeItem_Invoked" />
+                                        </SwipeItems>
+                                    </SwipeView.LeftItems>
+                                    <SwipeView.RightItems>
+                                        <SwipeItems Mode="Execute">
+                                            <SwipeItem Text="I didn't do this"
+                                                   IconImageSource="edit.png"
+                                                   CommandParameter="{Binding Id}"
+                                                   BackgroundColor="LightPink"
+                                                   Invoked="UndoSwipeItem_Invoked" />
+                                        </SwipeItems>
+                                    </SwipeView.RightItems>
+                                    <Grid>
+                                        <Label Grid.Column="1" Text="{Binding Title}" VerticalOptions="Center"></Label>
+                                    </Grid>
+                                </SwipeView>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button x:Name="AddButton" Text="Add" Clicked="AddButton_Clicked" Grid.Row="2"></Button>
+            <Button x:Name="AddButton" Text="+" 
+                    Clicked="AddButton_Clicked" 
+                    Grid.Row="2" 
+                    HeightRequest="40" 
+                    WidthRequest="40" 
+                    CornerRadius="20" 
+                    TextColor="White" 
+                    BackgroundColor="Blue"
+                    FontSize="Large"
+                    HorizontalOptions="End"></Button>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
