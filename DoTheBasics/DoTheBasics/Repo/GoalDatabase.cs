@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DoTheBasics.Models;
 
 namespace DoTheBasics.Repo
 {
@@ -13,7 +12,7 @@ namespace DoTheBasics.Repo
         {
             var conn = await GetDatabaseConnection<Goal>().ConfigureAwait(false);
 
-            return await AttemptAndRetry(() => conn.Table<Goal>().ToListAsync()).ConfigureAwait(false);
+            return await AttemptAndRetry(() => conn.QueryAsync<Goal>("SELECT * FROM Goal WHERE IsActive = 1")).ConfigureAwait(false);
         }
 
         public async Task<Goal> GetGoalAsync(int goalId)
@@ -44,7 +43,9 @@ namespace DoTheBasics.Repo
                 Title = title,
                 Description = description,
                 GoalHour = hour,
-                GoalMinute = minute
+                GoalMinute = minute,
+                LastCompletion = DateTime.MinValue,
+                IsActive = true
             };
 
             var conn = await GetDatabaseConnection<Goal>().ConfigureAwait(false);
@@ -52,6 +53,39 @@ namespace DoTheBasics.Repo
             await conn.InsertAsync(goal);
 
             return goal;
+        }
+
+        public async Task<Goal> UpdateGoal(Goal goal)
+        {
+            var conn = await GetDatabaseConnection<Goal>().ConfigureAwait(false);
+
+            await conn.ExecuteAsync("UPDATE Goal SET Title = ?, Description = ?, GoalHour = ?, GoalMinute = ? WHERE Id = ?",
+                goal.Title,
+                goal.Description,
+                goal.GoalHour,
+                goal.GoalMinute,
+                goal.Id);
+
+            return goal;
+        }
+
+        public async Task DeactivateGoal(int goalId)
+        {
+            var conn = await GetDatabaseConnection<Goal>().ConfigureAwait(false);
+
+            await conn.ExecuteAsync("UPDATE Goal SET IsActive = 0 WHERE Id = ?", goalId);
+        }
+
+        public async Task DeleteGoal(int goalId)
+        {
+            var conn = await GetDatabaseConnection<Goal, GoalCompletion, GoalStats>().ConfigureAwait(false);
+
+            await conn.RunInTransactionAsync(tran =>
+            {
+                tran.Execute("DELETE FROM GoalStats WHERE GoalId = ?", goalId);
+                tran.Execute("DELETE FROM GoalCompletion WHERE GoalId = ?", goalId);
+                tran.Execute("DELETE FROM Goal WHERE Id = ?", goalId);
+            });
         }
 
         public async Task<Goal> AddGoalCompletion(Goal goal, DateTime completionTime)

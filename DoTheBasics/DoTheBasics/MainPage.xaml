@@ -14,6 +14,8 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <ListView x:Name="ToDosListView"
+                      IsGroupingEnabled="True"
+                      GroupDisplayBinding="{Binding LongName}" GroupShortNameBinding="{Binding ShortName}"
                       Grid.Row="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -27,7 +29,7 @@
                                             BackgroundColor="LightGray"
                                             Invoked="EditSwipeItem_Invoked" />
                                         <SwipeItem Text="Delete"
-                                            IconImageSource="edit.png"
+                                            IconImageSource="trash.png"
                                             CommandParameter="{Binding Id}"
                                             BackgroundColor="LightGray"
                                             Invoked="DeleteSwipeItem_Invoked" />
@@ -36,69 +38,81 @@
                                 <SwipeView.RightItems>
                                     <SwipeItems Mode="Execute">
                                         <SwipeItem Text="Complete"
-                                                   IconImageSource="edit.png"
+                                                   IconImageSource="like.png"
                                                    CommandParameter="{Binding Id}"
                                                    BackgroundColor="LightGreen"
                                                    Invoked="CompleteSwipeItem_Invoked" />
                                     </SwipeItems>
                                 </SwipeView.RightItems>
                                 <Grid>
-                                    <Label Grid.Column="1" Text="{Binding Title}" VerticalOptions="Center"></Label>
+                                    <Label Text="{Binding Title}" VerticalOptions="Center" HorizontalOptions="CenterAndExpand"></Label>
                                 </Grid>
                             </SwipeView>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <ListView x:Name="DoneListView"
-                      Grid.Row="1">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Grid>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackLayout x:Name="ToggleCompletedGoals" Grid.Row="0" Orientation="Horizontal">
+                    <Label Text="Completed Goals" HorizontalOptions="StartAndExpand"></Label>
+                    <Label FontFamily="{StaticResource MaterialFontFamily}" Text="{Binding ChevronDown}" />
+                </StackLayout>
+                <Label Grid.Row="1" x:Name="EmptyDoneListLabel" Text="No completed goals." IsVisible="False" HorizontalOptions="CenterAndExpand"></Label>
+                <ListView x:Name="DoneListView"
+                          Grid.Row="2"
+                          IsVisible="False">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
                                 <SwipeView>
                                     <SwipeView.LeftItems>
                                         <SwipeItems>
                                             <SwipeItem Text="Edit"
-                                                IconImageSource="edit.png"
-                                                CommandParameter="{Binding Id}"
-                                                BackgroundColor="LightGray"
-                                                Invoked="EditSwipeItem_Invoked" />
+                                                    IconImageSource="edit.png"
+                                                    CommandParameter="{Binding Id}"
+                                                    BackgroundColor="LightGray"
+                                                    Invoked="EditSwipeItem_Invoked" />
                                             <SwipeItem Text="Delete"
-                                                IconImageSource="edit.png"
-                                                CommandParameter="{Binding Id}"
-                                                BackgroundColor="LightGray"
-                                                Invoked="DeleteSwipeItem_Invoked" />
+                                                    IconImageSource="trash.png"
+                                                    CommandParameter="{Binding Id}"
+                                                    BackgroundColor="LightGray"
+                                                    Invoked="DeleteSwipeItem_Invoked" />
                                         </SwipeItems>
                                     </SwipeView.LeftItems>
                                     <SwipeView.RightItems>
                                         <SwipeItems Mode="Execute">
                                             <SwipeItem Text="I didn't do this"
-                                                   IconImageSource="edit.png"
-                                                   CommandParameter="{Binding Id}"
-                                                   BackgroundColor="LightPink"
-                                                   Invoked="UndoSwipeItem_Invoked" />
+                                                       IconImageSource="dislike.png"
+                                                       CommandParameter="{Binding Id}"
+                                                       BackgroundColor="LightPink"
+                                                       Invoked="UndoSwipeItem_Invoked" />
                                         </SwipeItems>
                                     </SwipeView.RightItems>
                                     <Grid>
-                                        <Label Grid.Column="1" Text="{Binding Title}" VerticalOptions="Center"></Label>
+                                        <Label Text="{Binding Title}" VerticalOptions="Center" HorizontalOptions="CenterAndExpand"></Label>
                                     </Grid>
                                 </SwipeView>
-                            </Grid>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
             <Button x:Name="AddButton" Text="+" 
                     Clicked="AddButton_Clicked" 
                     Grid.Row="2" 
-                    HeightRequest="40" 
-                    WidthRequest="40" 
-                    CornerRadius="20" 
+                    HeightRequest="60" 
+                    WidthRequest="60" 
+                    CornerRadius="30" 
                     TextColor="White" 
-                    BackgroundColor="Blue"
+                    BackgroundColor="#2196F3"
                     FontSize="Large"
-                    HorizontalOptions="End"></Button>
+                    HorizontalOptions="End"
+                    Padding="0"></Button>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

@@ -49,6 +49,32 @@ namespace DoTheBasics.Repo
             return DatabaseConnection;
         }
 
+        protected static async ValueTask<SQLiteAsyncConnection> GetDatabaseConnection<T, U, V>()
+        {
+            if (!DatabaseConnection.TableMappings.Any(x => x.MappedType == typeof(T)))
+            {
+                // On sqlite-net v1.6.0+, enabling write-ahead logging allows for faster database execution
+                await DatabaseConnection.EnableWriteAheadLoggingAsync().ConfigureAwait(false);
+                await DatabaseConnection.CreateTablesAsync(CreateFlags.None, typeof(T)).ConfigureAwait(false);
+            }
+
+            if (!DatabaseConnection.TableMappings.Any(x => x.MappedType == typeof(U)))
+            {
+                // On sqlite-net v1.6.0+, enabling write-ahead logging allows for faster database execution
+                await DatabaseConnection.EnableWriteAheadLoggingAsync().ConfigureAwait(false);
+                await DatabaseConnection.CreateTablesAsync(CreateFlags.None, typeof(U)).ConfigureAwait(false);
+            }
+
+            if (!DatabaseConnection.TableMappings.Any(x => x.MappedType == typeof(V)))
+            {
+                // On sqlite-net v1.6.0+, enabling write-ahead logging allows for faster database execution
+                await DatabaseConnection.EnableWriteAheadLoggingAsync().ConfigureAwait(false);
+                await DatabaseConnection.CreateTablesAsync(CreateFlags.None, typeof(V)).ConfigureAwait(false);
+            }
+
+            return DatabaseConnection;
+        }
+
         protected static Task<T> AttemptAndRetry<T>(Func<Task<T>> action, int numRetries = 10)
         {
             return Policy.Handle<SQLite.SQLiteException>().WaitAndRetryAsync(numRetries, pollyRetryAttempt).ExecuteAsync(action);

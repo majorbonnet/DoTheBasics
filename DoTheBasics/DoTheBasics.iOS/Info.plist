@@ -34,5 +34,9 @@
     <string>DoTheBasics</string>
     <key>XSAppIconAssets</key>
     <string>Assets.xcassets/AppIcon.appiconset</string>
+    <key>UIAppFonts</key>
+    <array>
+      <string>materialdesignicons.ttf</string>
+    </array>
 </dict>
 </plist>

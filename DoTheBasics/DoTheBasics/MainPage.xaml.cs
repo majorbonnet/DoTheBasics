@@ -16,19 +16,45 @@ namespace DoTheBasics
     {
         private GoalDatabase _goalDb;
 
-        private ObservableCollection<GoalViewModel> _goalsToComplete;
+        private ObservableCollection<GroupedGoals> _goalsToComplete;
         private ObservableCollection<GoalViewModel> _completedGoals;
+
+        private GroupedGoals _morningGoals;
+        private GroupedGoals _noonGoals;
+        private GroupedGoals _eveningGoals;
 
         public MainPage()
         {
             InitializeComponent();
 
             _goalDb = new GoalDatabase();
-            _goalsToComplete = new ObservableCollection<GoalViewModel>();
+            _goalsToComplete = new ObservableCollection<GroupedGoals>();
             _completedGoals = new ObservableCollection<GoalViewModel>();
+
+            _morningGoals = new GroupedGoals("Morning", "AM");
+            _noonGoals = new GroupedGoals("Afternoon", "PM");
+            _eveningGoals = new GroupedGoals("Evening", "PM");
+
+            _goalsToComplete.Add(_morningGoals);
+            _goalsToComplete.Add(_noonGoals);
+            _goalsToComplete.Add(_eveningGoals);
 
             this.ToDosListView.ItemsSource = _goalsToComplete;
             this.DoneListView.ItemsSource = _completedGoals;
+
+            var tapGestureRecognizer = new TapGestureRecognizer();
+            tapGestureRecognizer.Tapped += (s, e) => {
+                if (_completedGoals.Count == 0)
+                {
+                    EmptyDoneListLabel.IsVisible = !EmptyDoneListLabel.IsVisible;
+                }
+                else
+                {
+                    DoneListView.IsVisible = !DoneListView.IsVisible;
+                }
+            };
+
+            this.ToggleCompletedGoals.GestureRecognizers.Add(tapGestureRecognizer);
         }
 
         protected override async void OnAppearing()
@@ -37,7 +63,10 @@ namespace DoTheBasics
 
             var goalsFromDb = await _goalDb.GetGoalsAsync();
 
-            _goalsToComplete.Clear();
+            _morningGoals.Clear();
+            _noonGoals.Clear();
+            _eveningGoals.Clear();
+
             _completedGoals.Clear();
 
             foreach (var goal in goalsFromDb)
@@ -48,7 +77,7 @@ namespace DoTheBasics
                 }
                 else
                 {
-                    _goalsToComplete.Add(new GoalViewModel(goal));
+                    AddGoalToToDoList(new GoalViewModel(goal));
                 }
             }
         }
@@ -69,7 +98,19 @@ namespace DoTheBasics
         {
             int goalId = (int)((SwipeItem)sender).CommandParameter;
 
-            await Navigation.PushAsync(new EditGoal(goalId));
+            await _goalDb.DeactivateGoal(goalId);
+
+            _completedGoals.Remove(_completedGoals.FirstOrDefault(g => g.Id == goalId));
+
+            if (_completedGoals.Count == 0 && DoneListView.IsVisible)
+            {
+                DoneListView.IsVisible = false;
+                EmptyDoneListLabel.IsVisible = true;
+            }
+
+            RemoveGoalFromToDoList(goalId);
+
+            DependencyService.Get<INotificationManager>().Cancel(goalId);
         }
 
         private async void CompleteSwipeItem_Invoked(object sender, EventArgs e)
@@ -79,8 +120,14 @@ namespace DoTheBasics
             var goal = await _goalDb.GetGoalAsync(goalId);
             var updatedGoal = await _goalDb.AddGoalCompletion(goal, DateTime.Now);
 
-            _goalsToComplete.Remove(_goalsToComplete.FirstOrDefault(g => g.Id == goalId));
+            RemoveGoalFromToDoList(goalId);
             _completedGoals.Add(new GoalViewModel(updatedGoal));
+
+            if (_completedGoals.Count > 0 && EmptyDoneListLabel.IsVisible)
+            {
+                DoneListView.IsVisible = true;
+                EmptyDoneListLabel.IsVisible = false;
+            }
         }
 
         private async void UndoSwipeItem_Invoked(object sender, EventArgs e)
@@ -91,7 +138,50 @@ namespace DoTheBasics
             var updatedGoal = await _goalDb.UndoGoalCompletion(goalId);
 
             _completedGoals.Remove(_completedGoals.FirstOrDefault(g => g.Id == goalId));
-            _goalsToComplete.Add(new GoalViewModel(updatedGoal));
+
+            if (_completedGoals.Count == 0 && DoneListView.IsVisible)
+            {
+                DoneListView.IsVisible = false;
+                EmptyDoneListLabel.IsVisible = true;
+            }
+
+            AddGoalToToDoList(new GoalViewModel(updatedGoal));
+        }
+
+        private void AddGoalToToDoList(GoalViewModel goal)
+        {
+            if (goal.GoalHour < 12)
+            {
+                _morningGoals.Add(goal);
+            }
+            else if (goal.GoalHour >= 12 && goal.GoalHour < 17)
+            {
+                _noonGoals.Add(goal);
+            }
+            else
+            {
+                _eveningGoals.Add(goal);
+            }
+        }
+
+        private void RemoveGoalFromToDoList(int goalId)
+        {
+            TryRemoveGoalFromGroupedList(goalId, _morningGoals);
+            TryRemoveGoalFromGroupedList(goalId, _noonGoals);
+            TryRemoveGoalFromGroupedList(goalId, _eveningGoals);
+        }
+
+        private bool TryRemoveGoalFromGroupedList(int goalId, GroupedGoals groupedGoals)
+        {
+            GoalViewModel toRemove = null;
+            if ((toRemove = groupedGoals.FirstOrDefault(g => g.Id == goalId)) != null)
+            {
+                groupedGoals.Remove(toRemove);
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

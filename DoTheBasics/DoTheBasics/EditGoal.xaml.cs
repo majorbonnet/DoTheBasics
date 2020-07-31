@@ -39,7 +39,25 @@ namespace DoTheBasics
 
         private async void SaveButton_Clicked(object sender, EventArgs e)
         {
-            var goal = await _goalDb.AddGoal(this.TitleEntry.Text, this.DescEditor.Text, this.GoalTimeSelector.Time.Hours, this.GoalTimeSelector.Time.Minutes);
+            Goal goal;
+
+            if (_goalId.HasValue)
+            {
+                goal = await _goalDb.GetGoalAsync(_goalId.Value);
+
+                goal.Title = this.TitleEntry.Text;
+                goal.Description = this.DescEditor.Text;
+                goal.GoalHour = this.GoalTimeSelector.Time.Hours;
+                goal.GoalMinute = this.GoalTimeSelector.Time.Minutes;
+
+                goal = await _goalDb.UpdateGoal(goal);
+            }
+            else
+            {
+                goal = await _goalDb.AddGoal(this.TitleEntry.Text, this.DescEditor.Text, this.GoalTimeSelector.Time.Hours, this.GoalTimeSelector.Time.Minutes);
+            }
+
+            DependencyService.Get<INotificationManager>().ScheduleNotification(goal.Id, goal.Title, goal.Description, DateTime.Now.Date.AddHours(goal.GoalHour).AddMinutes(goal.GoalMinute));
 
             await Navigation.PopAsync();
         }
