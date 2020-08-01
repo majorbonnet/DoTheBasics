@@ -28,6 +28,7 @@ namespace DoTheBasics
             InitializeComponent();
 
             _goalDb = new GoalDatabase();
+
             _goalsToComplete = new ObservableCollection<GroupedGoals>();
             _completedGoals = new ObservableCollection<GoalViewModel>();
 
