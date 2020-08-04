@@ -3,7 +3,7 @@ using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace DoTheBasics
+namespace DoTheBasics.Views
 {
     public partial class App : Application
     {
@@ -12,7 +12,7 @@ namespace DoTheBasics
         public App()
         {
             InitializeComponent();
-
+            _goalDb = new GoalDatabase();
             MainPage = new NavigationPage(new MainPage());
         }
 

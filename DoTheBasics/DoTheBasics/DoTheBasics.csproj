@@ -11,6 +11,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="materialdesignicons-webfont.ttf" />
+    <None Remove="Resources\faregular400.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\faregular400.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Polly" Version="7.2.1" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
@@ -19,10 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="EditGoal.xaml">
+    <EmbeddedResource Update="Views\EditGoal.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="MainPage.xaml">
+    <EmbeddedResource Update="Views\MainPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace DoTheBasics
+namespace DoTheBasics.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class EditGoal : ContentPage
