@@ -27,7 +27,7 @@ namespace DoTheBasics.Droid
             var builder = new Notification.Builder(Application.Context, Constants.NotificationChannelId)
                 .SetContentTitle(title)
                 .SetContentText(body)
-                .SetSmallIcon(Resource.Drawable.ic_launcher_foreground);
+                .SetSmallIcon(Resource.Drawable.ic_thebasics_not);
 
             var resultIntent = AndroidNotificationManager.GetLauncherActivity();
             resultIntent.SetFlags(ActivityFlags.NewTask | ActivityFlags.ClearTask);
