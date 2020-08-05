@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:converters="clr-namespace:DoTheBasics.Views"
+             xmlns:helpers="clr-namespace:DoTheBasics.Helpers"
              mc:Ignorable="d"
              x:Class="DoTheBasics.Views.MainPage"
              x:Name="MainPageView"
@@ -11,8 +11,8 @@
     <ContentPage.Content>
         <Grid Padding="5">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="55*"></RowDefinition>
+                <RowDefinition Height="25*"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <ListView x:Name="ToDosListView"
@@ -55,7 +55,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" Margin="0, 40">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="1"></RowDefinition>
@@ -66,7 +66,7 @@
                         <TapGestureRecognizer x:Name="ToggleCompletedTapGestureRecognizer" Tapped="ToggleCompletedTapGestureRecognizer_Tapped"></TapGestureRecognizer>
                     </StackLayout.GestureRecognizers>
                     <Label Text="Completed Goals" HorizontalOptions="CenterAndExpand"></Label>
-                    <Label Text="&#xf078;" FontFamily="FontAwesomeSolid" TextColor="Black" IsVisible="{Binding Path=ShowCompleted, Source={x:Reference MainPageView}, Converter={converters:InverseBooleanConverter}}" />
+                    <Label Text="&#xf078;" FontFamily="FontAwesomeSolid" TextColor="Black" IsVisible="{Binding Path=ShowCompleted, Source={x:Reference MainPageView}, Converter={helpers:InverseBooleanConverter}}" />
                     <Label Text="&#xf077;" FontFamily="FontAwesomeSolid" TextColor="Black" IsVisible="{Binding Path=ShowCompleted, Source={x:Reference MainPageView}}" />
                 </StackLayout>
                 <BoxView Grid.Row="1" VerticalOptions="Center"

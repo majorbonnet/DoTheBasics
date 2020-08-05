@@ -4,12 +4,10 @@ using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace DoTheBasics.Views
+namespace DoTheBasics.Helpers
 {
     public class InverseBooleanConverter : IValueConverter, IMarkupExtension
     {
-        #region IValueConverter Members
-
         public object Convert(object value, Type targetType, object parameter,
             System.Globalization.CultureInfo culture)
         {
@@ -29,7 +27,5 @@ namespace DoTheBasics.Views
         {
             return this;
         }
-
-        #endregion
     }
 }
