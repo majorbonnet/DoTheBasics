@@ -7,6 +7,7 @@
              x:Class="DoTheBasics.Views.App">
     <Application.Resources>
         <ResourceDictionary>
+            <x:String x:Key="IconChevronDown">&#x000f078;</x:String>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

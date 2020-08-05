@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:DoTheBasics.Views"
              mc:Ignorable="d"
              x:Class="DoTheBasics.Views.MainPage"
              x:Name="MainPageView"
@@ -57,21 +58,23 @@
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="1"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackLayout x:Name="ToggleCompletedGoals" Grid.Row="0" Orientation="Horizontal">
                     <StackLayout.GestureRecognizers>
                         <TapGestureRecognizer x:Name="ToggleCompletedTapGestureRecognizer" Tapped="ToggleCompletedTapGestureRecognizer_Tapped"></TapGestureRecognizer>
                     </StackLayout.GestureRecognizers>
-                    <Label Text="Completed Goals" HorizontalOptions="StartAndExpand"></Label>
-                    <Label Text="&#xf078;" FontFamily="FontAwesome"></Label>
-                    <Image>
-                        <Image.Source>
-                            <FontImageSource Glyph="&#xf078;" FontFamily="FontAwesome" Color="Black" />
-                        </Image.Source>
-                    </Image>
+                    <Label Text="Completed Goals" HorizontalOptions="CenterAndExpand"></Label>
+                    <Label Text="&#xf078;" FontFamily="FontAwesomeSolid" TextColor="Black" IsVisible="{Binding Path=ShowCompleted, Source={x:Reference MainPageView}, Converter={converters:InverseBooleanConverter}}" />
+                    <Label Text="&#xf077;" FontFamily="FontAwesomeSolid" TextColor="Black" IsVisible="{Binding Path=ShowCompleted, Source={x:Reference MainPageView}}" />
                 </StackLayout>
-                <StackLayout x:Name="CompletedGoalsLayout" Grid.Row="1" Orientation="Vertical" IsVisible="{Binding Path=ShowCompleted, Source={x:Reference MainPageView}}">
+                <BoxView Grid.Row="1" VerticalOptions="Center"
+                           HorizontalOptions="CenterAndExpand"
+                           HeightRequest="1"
+                           WidthRequest="800"
+                           Color="#9b9da8"></BoxView>
+                <StackLayout x:Name="CompletedGoalsLayout" Grid.Row="2" Orientation="Vertical" IsVisible="{Binding Path=ShowCompleted, Source={x:Reference MainPageView}}">
                     <Label x:Name="EmptyDoneListLabel" 
                            Text="No completed goals." 
                            IsVisible="{Binding NoCompleted}" 

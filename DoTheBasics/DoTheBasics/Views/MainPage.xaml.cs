@@ -42,6 +42,7 @@ namespace DoTheBasics.Views
             }
         }
 
+
         protected override async void OnAppearing()
         {
             base.OnAppearing();
