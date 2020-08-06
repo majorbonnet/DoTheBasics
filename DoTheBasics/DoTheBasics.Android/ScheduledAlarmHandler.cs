@@ -39,7 +39,10 @@ namespace DoTheBasics.Droid
             builder.SetContentIntent(resultPendingIntent);
             // Sending notification    
             var notificationManager = NotificationManagerCompat.From(Application.Context);
-            notificationManager.Notify(id, builder.Build());
+
+            var notificationId = int.Parse(string.Format("{0}{1:00}{2:00}{3}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, id));
+
+            notificationManager.Notify(notificationId, builder.Build());
         }
     }
 }
