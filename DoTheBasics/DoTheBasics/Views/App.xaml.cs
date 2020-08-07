@@ -13,7 +13,7 @@ namespace DoTheBasics.Views
         {
             InitializeComponent();
             _goalDb = new GoalDatabase();
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new AppShell();
         }
 
         protected async override void OnStart()

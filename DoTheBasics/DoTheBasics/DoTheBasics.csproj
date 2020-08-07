@@ -32,10 +32,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\Completed.xaml.cs">
+      <DependentUpon>Completed.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\OpenGoals.xaml.cs">
+      <DependentUpon>OpenGoals.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\AppShell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\EditGoal.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MainPage.xaml">
+    <EmbeddedResource Update="Views\OpenGoals.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

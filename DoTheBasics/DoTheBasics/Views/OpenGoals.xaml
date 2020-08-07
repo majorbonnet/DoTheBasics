@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="DoTheBasics.Views.OpenGoals"
+             x:Name="OpenGoalsView"
+             Title="Daily Goals">
+    <ContentPage.Content>
+        <Grid Padding="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="60"></RowDefinition>
+            </Grid.RowDefinitions>
+            <ListView x:Name="ToDosListView"
+                      IsGroupingEnabled="True"
+                      ItemsSource="{Binding Todo}"
+                      GroupDisplayBinding="{Binding LongName}" GroupShortNameBinding="{Binding ShortName}"
+                      Grid.Row="0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Edit"
+                                            IconImageSource="edit.png"
+                                            CommandParameter="{Binding Id}"
+                                            BackgroundColor="LightGray"
+                                            Command="{Binding Path=BindingContext.EditCommand, Source={x:Reference OpenGoalsView}}" />
+                                        <SwipeItem Text="Delete"
+                                            IconImageSource="trash.png"
+                                            CommandParameter="{Binding Id}"
+                                            BackgroundColor="LightGray"
+                                            Command="{Binding Path=BindingContext.DeleteCommand, Source={x:Reference OpenGoalsView}}" />
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem Text="Complete"
+                                                   IconImageSource="like.png"
+                                                   CommandParameter="{Binding Id}"
+                                                   BackgroundColor="LightGreen"
+                                                   Command="{Binding Path=BindingContext.CompleteCommand, Source={x:Reference OpenGoalsView}}" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Grid>
+                                    <Label Text="{Binding Title}" VerticalOptions="Center" HorizontalOptions="CenterAndExpand"></Label>
+                                </Grid>
+                            </SwipeView>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button x:Name="AddButton" Text="+" 
+                    Command="{Binding AddCommand}"
+                    Grid.Row="1" 
+                    HeightRequest="60" 
+                    WidthRequest="60" 
+                    CornerRadius="30" 
+                    TextColor="White" 
+                    BackgroundColor="#2196F3"
+                    FontSize="Large"
+                    HorizontalOptions="End"
+                    Padding="0"></Button>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

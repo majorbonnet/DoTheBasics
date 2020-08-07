@@ -10,6 +10,7 @@ using Xamarin.Forms.Xaml;
 
 namespace DoTheBasics.Views
 {
+    [QueryProperty("GoalIdStr", "goalId")]
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class EditGoal : ContentPage
     {
@@ -25,6 +26,14 @@ namespace DoTheBasics.Views
         public EditGoal(int goalId) : this()
         {
             _goalId = goalId;
+        }
+
+        public string GoalIdStr
+        {
+            set
+            {
+                this._goalId = int.Parse(value);
+            }
         }
 
         protected override async void OnAppearing()

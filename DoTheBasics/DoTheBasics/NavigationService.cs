@@ -9,26 +9,23 @@ namespace DoTheBasics
 {
     public class NavigationService : INavigationService
     {
-        private readonly INavigation _navigation;
-
-        public NavigationService(INavigation navigation)
+        public NavigationService()
         {
-            _navigation = navigation;
         }
 
         public async Task NavigateToEditAsync()
         {
-            await _navigation.PushAsync(new EditGoal());
+            await Shell.Current.GoToAsync("editgoal");
         }
 
         public async Task NavigateToEditAsync(int goalId)
         {
-            await _navigation.PushAsync(new EditGoal(goalId));
+            await Shell.Current.GoToAsync($"editgoal?goalId={goalId}");
         }
 
         public async Task NavigateToMainAsync()
         {
-            await _navigation.PushAsync(new MainPage());
+            await Shell.Current.GoToAsync("//goals/opengoals");
         }
     }
 }
